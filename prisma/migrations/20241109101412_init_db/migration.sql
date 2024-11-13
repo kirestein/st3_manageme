@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "employeeContractStatus" AS ENUM ('ACTIVE', 'INACTIVE');
+CREATE TYPE "employeeContractStatus" AS ENUM('ACTIVE', 'INACTIVE');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -12,8 +12,8 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
+
+CONSTRAINT "User_pkey" PRIMARY KEY ("id") );
 
 -- CreateTable
 CREATE TABLE "department" (
@@ -26,8 +26,8 @@ CREATE TABLE "department" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "department_pkey" PRIMARY KEY ("cargoId")
-);
+
+CONSTRAINT "department_pkey" PRIMARY KEY ("cargoId") );
 
 -- CreateTable
 CREATE TABLE "employeeContact" (
@@ -38,8 +38,8 @@ CREATE TABLE "employeeContact" (
     "contactEmail" TEXT,
     "contactRelationship" TEXT,
 
-    CONSTRAINT "employeeContact_pkey" PRIMARY KEY ("contactId")
-);
+
+CONSTRAINT "employeeContact_pkey" PRIMARY KEY ("contactId") );
 
 -- CreateTable
 CREATE TABLE "employeeContractData" (
@@ -67,6 +67,7 @@ CREATE TABLE "employeeContractData" (
     "IRPF" TEXT,
     "status" "employeeContractStatus" NOT NULL DEFAULT 'ACTIVE',
 
+
     CONSTRAINT "employeeContractData_pkey" PRIMARY KEY ("contractDataId")
 );
 
@@ -85,7 +86,7 @@ CREATE TABLE "employeeData" (
     "cep" TEXT,
     "employeeAddress" TEXT,
     "employeeAddressNumber" SMALLINT,
-    "employeeAeighborhood" TEXT,
+    "employeeNeighborhood" TEXT,
     "employeeAddressComplement" TEXT,
     "employeeAddressState" TEXT,
     "employeeAddressCity" TEXT,
@@ -110,8 +111,8 @@ CREATE TABLE "employeeData" (
     "partnerBirthday" DATE,
     "partnerRg" TEXT,
 
-    CONSTRAINT "employeeData_pkey" PRIMARY KEY ("employeeDataId")
-);
+
+CONSTRAINT "employeeData_pkey" PRIMARY KEY ("employeeDataId") );
 
 -- CreateTable
 CREATE TABLE "employeeDependent" (
@@ -121,6 +122,7 @@ CREATE TABLE "employeeDependent" (
     "dependentCpf" TEXT,
     "dependentBirthday" DATE,
     "dependentRelationship" TEXT,
+
 
     CONSTRAINT "employeeDependent_pkey" PRIMARY KEY ("dependentId")
 );
@@ -149,6 +151,7 @@ CREATE TABLE "employeeDocumentation" (
     "healthPlan" TEXT,
     "healthCard_number" TEXT,
 
+
     CONSTRAINT "employeeDocumentation_pkey" PRIMARY KEY ("documentationId")
 );
 
@@ -169,6 +172,7 @@ CREATE TABLE "employeeTraineeData" (
     "lifInsurancePolicy" TEXT,
     "ra" TEXT,
 
+
     CONSTRAINT "employeeTraineeData_pkey" PRIMARY KEY ("traineeId")
 );
 
@@ -178,8 +182,8 @@ CREATE TABLE "employees" (
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "id" TEXT NOT NULL,
 
-    CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
-);
+
+CONSTRAINT "employees_pkey" PRIMARY KEY ("id") );
 
 -- CreateTable
 CREATE TABLE "forms" (
@@ -187,50 +191,57 @@ CREATE TABLE "forms" (
     "nome" TEXT NOT NULL,
     "tipo" SMALLINT NOT NULL,
 
-    CONSTRAINT "forms_pkey" PRIMARY KEY ("parametro_id")
-);
+
+CONSTRAINT "forms_pkey" PRIMARY KEY ("parametro_id") );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User" ("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "department_employeeContractId_key" ON "department"("employeeContractId");
+CREATE UNIQUE INDEX "department_employeeContractId_key" ON "department" ("employeeContractId");
 
 -- CreateIndex
-CREATE INDEX "employeeContact_employeeDataId_fkey" ON "employeeContact"("employeeDataId");
+CREATE INDEX "employeeContact_employeeDataId_fkey" ON "employeeContact" ("employeeDataId");
 
 -- CreateIndex
-CREATE INDEX "employeeContractData_employeeId_fkey" ON "employeeContractData"("employeeId");
+CREATE INDEX "employeeContractData_employeeId_fkey" ON "employeeContractData" ("employeeId");
 
 -- CreateIndex
-CREATE INDEX "employeeData_employeeId_fkey_2" ON "employeeData"("employeeId");
+CREATE INDEX "employeeData_employeeId_fkey_2" ON "employeeData" ("employeeId");
 
 -- CreateIndex
-CREATE INDEX "employeeDependent_employeeDataId_fkey" ON "employeeDependent"("employeeDataId");
+CREATE INDEX "employeeDependent_employeeDataId_fkey" ON "employeeDependent" ("employeeDataId");
 
 -- CreateIndex
-CREATE INDEX "employeeDocumentation_employeeId_fkey" ON "employeeDocumentation"("employeeId");
+CREATE INDEX "employeeDocumentation_employeeId_fkey" ON "employeeDocumentation" ("employeeId");
 
 -- CreateIndex
-CREATE INDEX "employeeTraineeData_employeeId_fkey" ON "employeeTraineeData"("employeeId");
+CREATE INDEX "employeeTraineeData_employeeId_fkey" ON "employeeTraineeData" ("employeeId");
 
 -- AddForeignKey
-ALTER TABLE "department" ADD CONSTRAINT "department_employeeContractId_fkey" FOREIGN KEY ("employeeContractId") REFERENCES "employeeContractData"("contractDataId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "department"
+ADD CONSTRAINT "department_employeeContractId_fkey" FOREIGN KEY ("employeeContractId") REFERENCES "employeeContractData" ("contractDataId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "employeeContact" ADD CONSTRAINT "employeeContact_employeeDataId_fkey_1" FOREIGN KEY ("employeeDataId") REFERENCES "employeeData"("employeeDataId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "employeeContact"
+ADD CONSTRAINT "employeeContact_employeeDataId_fkey_1" FOREIGN KEY ("employeeDataId") REFERENCES "employeeData" ("employeeDataId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "employeeContractData" ADD CONSTRAINT "employeeContractData_employeeId_fkey_2" FOREIGN KEY ("employeeId") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "employeeContractData"
+ADD CONSTRAINT "employeeContractData_employeeId_fkey_2" FOREIGN KEY ("employeeId") REFERENCES "employees" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "employeeData" ADD CONSTRAINT "employeeData_employeeId_fkey_1" FOREIGN KEY ("employeeId") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "employeeData"
+ADD CONSTRAINT "employeeData_employeeId_fkey_1" FOREIGN KEY ("employeeId") REFERENCES "employees" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "employeeDependent" ADD CONSTRAINT "employeeDependent_employeeDataId_fkey_2" FOREIGN KEY ("employeeDataId") REFERENCES "employeeData"("employeeDataId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "employeeDependent"
+ADD CONSTRAINT "employeeDependent_employeeDataId_fkey_2" FOREIGN KEY ("employeeDataId") REFERENCES "employeeData" ("employeeDataId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "employeeDocumentation" ADD CONSTRAINT "employeeDocumentation_employeeId_fkey_2" FOREIGN KEY ("employeeId") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "employeeDocumentation"
+ADD CONSTRAINT "employeeDocumentation_employeeId_fkey_2" FOREIGN KEY ("employeeId") REFERENCES "employees" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "employeeTraineeData" ADD CONSTRAINT "employeeTraineeData_employeeId_fkey_2" FOREIGN KEY ("employeeId") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "employeeTraineeData"
+ADD CONSTRAINT "employeeTraineeData_employeeId_fkey_2" FOREIGN KEY ("employeeId") REFERENCES "employees" ("id") ON DELETE CASCADE ON UPDATE CASCADE;

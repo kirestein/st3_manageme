@@ -39,6 +39,7 @@ const LoginPage = async () => {
                     <Button variant='outline'>Login ou criar conta</Button>
                 </SignInButton>
             </div>
+
         </div>
     )
 }
