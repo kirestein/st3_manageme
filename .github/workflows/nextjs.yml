@@ -31,6 +31,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16" # or the version you need
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Detect package manager
         id: detect-package-manager
         run: |
