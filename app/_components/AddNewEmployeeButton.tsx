@@ -2,7 +2,7 @@
 import { ArrowDownUpIcon } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 
 import { z } from "zod"
 import { driversLicenseCategory, employeeCargo, employeeContractStatus, employeeGender, employeeGraduation, employeeMaritalStatus, employeeRelationship, employeeSkinColor } from '@prisma/client'
@@ -14,13 +14,13 @@ import { ScrollArea } from './ui/scroll-area'
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "./ui/select"
 import { MoneyInput } from './MoneyInput'
+import { DRIVER_CATEGORY_LABELS, EMPLOYEE_CARGO_LABELS, EMPLOYEE_CIVIL_STATUS_LABELS, EMPLOYEE_GENDER_LABELS, EMPLOYEE_RELATIONSHIP_LABELS, EMPLOYEE_SCHOOLING_LABELS, EMPLOYEE_SKIN_COLOR_LABELS, EMPLOYEE_STATUS_LABELS } from '../_constants/employees'
+import { DatePicker } from './ui/date-picker'
 
 const formSchema = z.object({
     fullName: z.string().min(3, {
@@ -126,9 +126,10 @@ const formSchema = z.object({
     IRPF: z.string().optional(),
     status: z.nativeEnum(employeeContractStatus),
 })
+type FormSchema = z.infer<typeof formSchema>
 
 const AddNewEmployeeButton = () => {
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             fullName: '',
@@ -216,7 +217,7 @@ const AddNewEmployeeButton = () => {
         },
     })
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const onSubmit = (data: FormSchema) => {
         console.log(data)
     }
 
@@ -309,7 +310,7 @@ const AddNewEmployeeButton = () => {
                                     <FormItem>
                                         <FormLabel>Data de Nascimento</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} value={field.value.toISOString().split('T')[0]} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -457,12 +458,11 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Gênero</SelectLabel>
-                                                    <SelectItem value="MASCULINO">Masculino</SelectItem>
-                                                    <SelectItem value="FEMININO">Feminino</SelectItem>
-                                                    <SelectItem value="OTHER">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {Object.entries(EMPLOYEE_GENDER_LABELS).map(([key, value]) => (
+                                                    <SelectItem key={key} value={key}>
+                                                        {value}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
 
@@ -510,14 +510,13 @@ const AddNewEmployeeButton = () => {
 
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Estado Civil</SelectLabel>
-                                                    <SelectItem value="SOLTEIRO">Solteiro</SelectItem>
-                                                    <SelectItem value="CASADO">Casado</SelectItem>
-                                                    <SelectItem value="DIVORCIADO">Divorciado</SelectItem>
-                                                    <SelectItem value="VIUVO">Viúvo</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_CIVIL_STATUS_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -537,22 +536,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Grau de escolaridade</SelectLabel>
-                                                    <SelectItem value="ENSINO_FUNDAMENTAL">Ensino Fundamental</SelectItem>
-                                                    <SelectItem value="ENSINO_MEDIO">Ensino Médio</SelectItem>
-                                                    <SelectItem value="ENSINO_SUPERIOR_CURSANDO">Ensino Superior Cursando</SelectItem>
-                                                    <SelectItem value="ENSINO_SUPERIOR_COMPLETO">Ensino Superior Completo</SelectItem>
-                                                    <SelectItem value="POS_GRADUACAO_CURSANDO">Pós-Graduação Cursando</SelectItem>
-                                                    <SelectItem value="POS_GRADUACAO_COMPLETO">Pós-Graduação Completo</SelectItem>
-                                                    <SelectItem value="MESTRADO_CURSANDO">Mestrado Cursando</SelectItem>
-                                                    <SelectItem value="MESTRADO_COMPLETO">Mestrado Completo</SelectItem>
-                                                    <SelectItem value="DOUTORADO_CURSANDO">Doutorado Cursando</SelectItem>
-                                                    <SelectItem value="DOUTORADO_COMPLETO">Doutorado Completo</SelectItem>
-                                                    <SelectItem value="POS_DOUTORADO_CURSANDO">Pós-Doutorado Cursando</SelectItem>
-                                                    <SelectItem value="POS_DOUTORADO_COMPLETO">Pós-Doutorado Completo</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_SCHOOLING_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -572,14 +562,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="BRANCO">Branco</SelectItem>
-                                                    <SelectItem value="NEGRO">Preto</SelectItem>
-                                                    <SelectItem value="AMARELO">Amarelo</SelectItem>
-                                                    <SelectItem value="PARDO">Pardo</SelectItem>
-                                                    <SelectItem value="INDIGENA">Índigena</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_SKIN_COLOR_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -619,7 +608,7 @@ const AddNewEmployeeButton = () => {
                                     <FormItem>
                                         <FormLabel>Data de nascimento do conjugê</FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -722,15 +711,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="ESPOSA">Esposa</SelectItem>
-                                                    <SelectItem value="ESPOSO">Marido</SelectItem>
-                                                    <SelectItem value="FILHO">Filho</SelectItem>
-                                                    <SelectItem value="FILHA">Filha</SelectItem>
-                                                    <SelectItem value="PAI">Pai</SelectItem>
-                                                    <SelectItem value="MAE">Mãe</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_RELATIONSHIP_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -757,7 +744,7 @@ const AddNewEmployeeButton = () => {
                                     <FormItem>
                                         <FormLabel>Data de nascimento do dependente</FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -791,15 +778,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="ESPOSA">Esposa</SelectItem>
-                                                    <SelectItem value="ESPOSO">Marido</SelectItem>
-                                                    <SelectItem value="FILHO">Filho</SelectItem>
-                                                    <SelectItem value="FILHA">Filha</SelectItem>
-                                                    <SelectItem value="PAI">Pai</SelectItem>
-                                                    <SelectItem value="MAE">Mãe</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_RELATIONSHIP_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -841,7 +826,7 @@ const AddNewEmployeeButton = () => {
                                             Data de emissão do RG
                                         </FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -974,17 +959,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="A">A</SelectItem>
-                                                    <SelectItem value="B">B</SelectItem>
-                                                    <SelectItem value="C">C</SelectItem>
-                                                    <SelectItem value="D">D</SelectItem>
-                                                    <SelectItem value="E">E</SelectItem>
-                                                    <SelectItem value="AB">AB</SelectItem>
-                                                    <SelectItem value="AC">AC</SelectItem>
-                                                    <SelectItem value="AD">AD</SelectItem>
-                                                    <SelectItem value="AE">AE</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(DRIVER_CATEGORY_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -996,9 +977,9 @@ const AddNewEmployeeButton = () => {
                                 name="driversLicenseEmissionDate"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>CNH</FormLabel>
+                                        <FormLabel>Data de emissão da CNH</FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -1009,9 +990,9 @@ const AddNewEmployeeButton = () => {
                                 name="driversLicenseExpirationDate"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>CNH</FormLabel>
+                                        <FormLabel>Data de expiração da CNH</FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -1211,19 +1192,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="AUXILIAR_PEDAGOGICO">Auxiliar Pedagógico</SelectItem>
-                                                    <SelectItem value="PROFESSOR">Professor</SelectItem>
-                                                    <SelectItem value="SECRETARIA">Secretária</SelectItem>
-                                                    <SelectItem value="PEDAGOGO">Pedagogo</SelectItem>
-                                                    <SelectItem value="AUXILIAR_SERVICOS_GERAIS">Auxiliar de serviços gerais</SelectItem>
-                                                    <SelectItem value="MOTORISTA">Motorista</SelectItem>
-                                                    <SelectItem value="MONITOR">Monitor</SelectItem>
-                                                    <SelectItem value="ESTAGIARIO">Estagiário</SelectItem>
-                                                    <SelectItem value="COORDENADOR">Coordenador</SelectItem>
-                                                    <SelectItem value="DIRETOR">Diretor</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_CARGO_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -1250,7 +1225,7 @@ const AddNewEmployeeButton = () => {
                                     <FormItem>
                                         <FormLabel>Data de admissão</FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -1278,7 +1253,7 @@ const AddNewEmployeeButton = () => {
                                             Data de término do contrato
                                         </FormLabel>
                                         <FormControl>
-                                            <Input type='date' {...field} value={field.value ? field.value.toISOString().split('T')[0] : ''} />
+                                            <DatePicker value={field.value} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -1328,7 +1303,7 @@ const AddNewEmployeeButton = () => {
                                 name="hasAccumulated"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>CNH</FormLabel>
+                                        <FormLabel>Possuí acumulo</FormLabel>
                                         <FormControl>
                                             <Input type='checkbox' checked={Boolean(field.value)} onChange={field.onChange} onBlur={field.onBlur} ref={field.ref} />
                                         </FormControl>
@@ -1415,13 +1390,8 @@ const AddNewEmployeeButton = () => {
                                                     <SelectValue placeholder="Selecione o tipo de conta" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="CONTA_CORRENTE">Conta Corrente</SelectItem>
-                                                    <SelectItem value="CONTA_SALARIO">Conta Salário</SelectItem>
-                                                    <SelectItem value="CONTA_POUPANÇA">Conta Poupança</SelectItem>
-                                                    <SelectItem value="OUTRO">Outra</SelectItem>
-                                                </SelectGroup>
+                                            <SelectContent className='w-full'>
+
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -1456,14 +1426,13 @@ const AddNewEmployeeButton = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="ATIVO">Ativo</SelectItem>
-                                                    <SelectItem value="INATIVO">Inativo</SelectItem>
-                                                    <SelectItem value="FERIAS">Férias</SelectItem>
-                                                    <SelectItem value="AFASTADO">Afastado</SelectItem>
-                                                    <SelectItem value="DEMITIDO">Demitido</SelectItem>
-                                                    <SelectItem value="OUTRO">Outro</SelectItem>
-                                                </SelectGroup>
+                                                {
+                                                    Object.entries(EMPLOYEE_STATUS_LABELS).map(([key, value]) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {value}
+                                                        </SelectItem>
+                                                    ))
+                                                }
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -1475,8 +1444,10 @@ const AddNewEmployeeButton = () => {
 
 
                             <DialogFooter>
-                                <Button variant='outline'>Cancelar</Button>
-                                <Button variant='default'>Adicionar</Button>
+                                <DialogClose asChild>
+                                    <Button type='button' variant='outline'>Cancelar</Button>
+                                </DialogClose>
+                                <Button type='submit' variant='default'>Adicionar</Button>
                             </DialogFooter>
                         </form>
                     </Form>

@@ -168,6 +168,7 @@ enum employeeMaritalStatus {
   SOLTEIRO
   CASADO
   DIVORCIADO
+  SEPARADO
   VIUVO
   OUTRO
 }
@@ -190,7 +191,7 @@ enum employeeGraduation {
 
 enum employeeSkinColor {
   BRANCO
-  NEGRO
+  PRETO
   AMARELO
   PARD0
   INDIGENAS
