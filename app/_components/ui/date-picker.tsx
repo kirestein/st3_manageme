@@ -33,7 +33,7 @@ export const DatePicker = ({ value, onChange }: DatePickerProps) => {
     const currentYear = new Date().getFullYear()
     const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i)
     const months = [
-        "January", "February", "March", "April", "May", "June",
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "June",
         "July", "August", "September", "October", "November", "December"
     ]
 
